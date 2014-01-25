@@ -30,9 +30,7 @@ public class YStockQuote {
 	public YStockQuote(String ticker)
 	{
 		String url = "http://finance.yahoo.com/d/quotes.csv?s=";
-		
-		url += ticker;
-			
+		url += ticker;		
 		url += "&f=" + "snl1c6va2xj1b4j4dyekjm3m4rr5p5p6s7p2s6e7e8e9ght8d1j2";
 		InputStream input;
 		try {
@@ -82,16 +80,208 @@ public class YStockQuote {
 				shares_outstanding += data[i];
 			shares_outstanding = shares_outstanding.replace("\r\n", "");
 			shares_outstanding = shares_outstanding.replace(" ", "");
-
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	
+	public void find_historical_data(int day, int month, int year) throws MalformedURLException, IOException {
+		try {
+			String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=0&b=1&c=1970&d=";
+			url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
+			InputStream input;
+			input = new URL(url).openStream();
+			Scanner s = new Scanner(input);
+			s.useDelimiter("\\A");
+			String csv = s.hasNext() ? s.next() : "";
+			s.close();
+			input.close();
+			csv = csv.replace("\"", "");
+			historical_data = new ArrayList<String>(Arrays.asList(csv.split("\n")));
+		}
+		catch(Exception ex) {
+			System.out.println("Could not retrieve data");
+		}
+	}
+	
+	/*
+	 * Uses binary search to find data from a particular date. 
+	 * @param	Date	String format in yyyy/MM/dd
+	 */
+	public String find_data_by_date(String date) {
+		int min = 0;
+		int max = historical_data.size() -1;
+		while (max >= min) {
+			int mid = min + (max - min) /2;
+			String y = historical_data.get(mid);
+			if (historical_data.get(mid).contains(date))
+			{
+				return historical_data.get(mid);
+			}
+			else if (historical_data.get(mid).compareTo(date) < 0) //lower half of array
+				max = mid - 1;
+			else //upper half
+				min = mid + 1;
+		}
+		return "FAIL";
+	}
+	
+	/*
+	 * Historical price based on adjusted close on date
+	 * @param	Date	date of close price
+	 */
+	public void find_ten_year_change(String date) {
+		// TODO Auto-generated method stub
+	
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double ten_year_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - ten_year_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			ten_year[0] = String.valueOf(change);
+			ten_year[1] = String.valueOf(percent) + "%";
+		}
+	}
 
+	public void find_ytd_change(String date) {
+		// TODO Auto-generated method stub
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");	
+			double ytd_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - ytd_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			YTD[0] = String.valueOf(change);
+			YTD[1] = String.valueOf(percent) + "%";
+		}
+	}
+
+	public void find_five_year_change(String date) {
+		// TODO Auto-generated method stub
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double five_year_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - five_year_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			five_year[0] = String.valueOf(change);
+			five_year[1] = String.valueOf(percent) + "%";
+		}
+	}
+
+	public void find_one_year_change(String date) {
+		// TODO Auto-generated method stub
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double one_year_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - one_year_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			one_year[0] = String.valueOf(change);
+			one_year[1] = String.valueOf(percent) + "%";
+		}
+	}
+
+	public void find_six_month_change(String date) {
+		// TODO Auto-generated method stub
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double six_month_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - six_month_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			six_month[0] = String.valueOf(change);
+			six_month[1] = String.valueOf(percent) + "%";
+		}
+	}
+
+	public void find_three_month_change(String date) {
+		// TODO Auto-generated method stub
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double three_month_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - three_month_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			three_month[0] = String.valueOf(change);
+			three_month[1] = String.valueOf(percent) + "%";
+		}
+	}
+
+	public void find_one_month_change(String date) {
+		// TODO Auto-generated method stub
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double one_month_price = Double.parseDouble(data[data.length]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - one_month_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			one_month[0] = String.valueOf(change);
+			one_month[1] = String.valueOf(percent) + "%";
+		}
+	}
+
+	public void find_five_day_change(String date) {
+		String entries = this.find_data_by_date(date);
+		if (!entries.equals("FAIL")) {
+			String[] data = entries.split(",");
+			double five_day_price = Double.parseDouble(data[4]);
+			double current_price = Double.parseDouble(price);
+			double change = current_price - five_day_price;
+			double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+			five_day[0] = String.valueOf(change);
+			five_day[1] = String.valueOf(percent) + "%";
+		}
+	}
+	
+	public String[] get_ten_year_change() {
+		// TODO Auto-generated method stub
+		return this.ten_year;
+	}
+
+	public String[] get_ytd_change() {
+		// TODO Auto-generated method stub
+		return this.YTD;
+	}
+
+	public String[] get_five_year_change() {
+		// TODO Auto-generated method stub
+		return this.five_year;
+	}
+
+	public String[] get_one_year_change() {
+		// TODO Auto-generated method stub
+		return this.one_year;
+	}
+
+	public String[] get_six_month_change() {
+		// TODO Auto-generated method stub
+		return this.six_month;
+	}
+
+	public String[] get_three_month_change() {
+		// TODO Auto-generated method stub
+		return this.three_month;
+	}
+
+	public String[] get_one_month_change() {
+		// TODO Auto-generated method stub
+		return this.one_month;
+	}
+
+	public String[] get_five_day_change() {
+		return this.five_day;
+	}
+	
 	public String get_symbol()
 	{
 		return this.symbol;
@@ -251,271 +441,4 @@ public class YStockQuote {
 	{
 		return this.shares_outstanding;
 	}
-	
-	public void find_historical_data(int day, int month, int year) throws MalformedURLException, IOException {
-		try {
-			String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=0&b=1&c=1970&d=";
-			url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-			InputStream input;
-			input = new URL(url).openStream();
-			Scanner s = new Scanner(input);
-			s.useDelimiter("\\A");
-			String csv = s.hasNext() ? s.next() : "";
-			s.close();
-			input.close();
-			csv = csv.replace("\"", "");
-			historical_data = new ArrayList<String>(Arrays.asList(csv.split("\n")));
-		}
-		catch(Exception ex) {
-			System.out.println("Could not retrieve data");
-		}
-	}
-	
-	/*
-	 * Uses binary search to find data from a particular date. 
-	 * @param	Date	String format in yyyy/MM/dd
-	 */
-	public String find_data_by_date(String date) {
-		int min = 0;
-		int max = historical_data.size() -1;
-		while (max >= min) {
-			int mid = min + (max - min) /2;
-			String y = historical_data.get(mid);
-			if (historical_data.get(mid).contains(date))
-			{
-				return historical_data.get(mid);
-			}
-			else if (historical_data.get(mid).compareTo(date) < 0) //lower half of array
-				max = mid - 1;
-			else //upper half
-				min = mid + 1;
-		}
-		return "FAIL";
-	}
-	
-	public void find_ten_year_change(String day, String month, String year) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double ten_year_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - ten_year_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		ten_year[0] = String.valueOf(change);
-		ten_year[1] = String.valueOf(percent) + "%";
-
-	}
-
-	public void find_ytd_change(String day, String month, String year) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double ytd_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - ytd_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		YTD[0] = String.valueOf(change);
-		YTD[1] = String.valueOf(percent) + "%";
-	}
-
-	public void find_five_year_change(String day, String month, String year) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double five_year_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - five_year_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		five_year[0] = String.valueOf(change);
-		five_year[1] = String.valueOf(percent) + "%";
-	}
-
-	public void find_one_year_change(String day, String month, String year) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double one_year_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - one_year_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		one_year[0] = String.valueOf(change);
-		one_year[1] = String.valueOf(percent) + "%";
-	}
-
-	public void find_six_month_change(String day, String month, String year) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double six_month_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - six_month_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		six_month[0] = String.valueOf(change);
-		six_month[1] = String.valueOf(percent) + "%";
-	}
-
-	public void find_three_month_change(String day, String month, String year) throws MalformedURLException, IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double three_month_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - three_month_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		three_month[0] = String.valueOf(change);
-		three_month[1] = String.valueOf(percent) + "%";
-	}
-
-	public void find_one_month_change(String day, String month, String year) throws IOException {
-		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double one_month_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - one_month_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		one_month[0] = String.valueOf(change);
-		one_month[1] = String.valueOf(percent) + "%";
-	}
-
-	public void find_five_day_change(String day, String month, String year) throws MalformedURLException, IOException {
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
-		
-		url += month + "&b=" + day + "&c=" + year + "&d=";
-		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
-		InputStream input;
-		input = new URL(url).openStream();
-		Scanner s = new Scanner(input);
-		s.useDelimiter("\\A");
-		String csv = s.hasNext() ? s.next() : "";
-		s.close();
-		input.close();
-		csv = csv.replace("\"", "");
-		String data[] = csv.split(",");
-		double five_day_price = Double.parseDouble(data[4]);
-		double current_price = Double.parseDouble(price);
-		double change = current_price - five_day_price;
-		double percent = Math.round(change/current_price * 100 *100.0)/100.0;
-		five_day[0] = String.valueOf(change);
-		five_day[1] = String.valueOf(percent) + "%";
-	}
-	
-	public String[] get_ten_year_change() {
-		// TODO Auto-generated method stub
-		return this.ten_year;
-	}
-
-	public String[] get_ytd_change() {
-		// TODO Auto-generated method stub
-		return this.YTD;
-	}
-
-	public String[] get_five_year_change() {
-		// TODO Auto-generated method stub
-		return this.five_year;
-	}
-
-	public String[] get_one_year_change() {
-		// TODO Auto-generated method stub
-		return this.one_year;
-	}
-
-	public String[] get_six_month_change() {
-		// TODO Auto-generated method stub
-		return this.six_month;
-	}
-
-	public String[] get_three_month_change() {
-		// TODO Auto-generated method stub
-		return this.three_month;
-	}
-
-	public String[] get_one_month_change() {
-		// TODO Auto-generated method stub
-		return this.one_month;
-	}
-
-	public String[] get_five_day_change() {
-		return this.five_day;
-	}
-	
-	
-    
 }
