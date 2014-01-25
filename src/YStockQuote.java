@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -10,56 +12,26 @@ import java.util.Scanner;
 
 public class YStockQuote {
 
-	private String name;
-	private String symbol;
-	private String price;
-	private String change;
-	private String volume;
-	private String avg_daily_volume;
-	private String stock_exchange;
-	private String market_cap;
-	private String book_value;
-	private String ebita;
-	private String dividend_per_share;
-	private String dividend_yield;
-	private String earnings_per_share;
-	private String year_high;
-	private String year_low;
-	private String fiftyday_moving_avg;
-	private String twohundredday_moving_avg;
-	private String price_earnings_ratio;
-	private String price_earnings_growth_ratio;
-	private String price_sales_ratio;
-	private String price_book_ratio;
-	private String short_ratio;
-	private String percent_change;
-	private String revenue;
-	private String eps_estimate_current_yr;
-	private String eps_estimate_next_yr;
-	private String eps_estimate_next_quarter;
-	private String days_low;
-	private String days_high;
-	private String one_yr_target;
-	private String last_trade_date;
-	private String[] five_day;
-	private String[] one_month;
-	private String[] three_month;
-	private String[] six_month;
-	private String[] one_year;
-	private String[] YTD;
-	private String[] five_year;
-	private String[] ten_year;
+	private String name, symbol, price, change, volume;
+	private String avg_daily_volume, stock_exchange, market_cap;
+	private String book_value, ebita, dividend_per_share, dividend_yield;
+	private String earnings_per_share, year_high, year_low, fiftyday_moving_avg;
+	private String twohundredday_moving_avg, price_earnings_ratio;
+	private String price_earnings_growth_ratio, price_sales_ratio;
+	private String price_book_ratio, short_ratio, percent_change;
+	private String revenue, eps_estimate_current_yr, eps_estimate_next_yr;
+	private String eps_estimate_next_quarter, days_low, days_high;
+	private String one_yr_target, last_trade_date;
+	private String[] five_day, one_month, three_month, six_month;
+	private String[] one_year, YTD, five_year, ten_year;
 	private String shares_outstanding;
-
+	public ArrayList<String> historical_data;
 	
-	
-	
-	
-	public YStockQuote(String symbol)
+	public YStockQuote(String ticker)
 	{
 		String url = "http://finance.yahoo.com/d/quotes.csv?s=";
 		
-		url += symbol;
+		url += ticker;
 			
 		url += "&f=" + "snl1c6va2xj1b4j4dyekjm3m4rr5p5p6s7p2s6e7e8e9ght8d1j2";
 		InputStream input;
@@ -72,7 +44,6 @@ public class YStockQuote {
 			input.close();
 			csv = csv.replace("\"", "");
 			String[] data = csv.split(",");
-			
 			symbol = data[0];
 			name = data[1];
 			price = data[2];
@@ -281,9 +252,50 @@ public class YStockQuote {
 		return this.shares_outstanding;
 	}
 	
+	public void find_historical_data(int day, int month, int year) throws MalformedURLException, IOException {
+		try {
+			String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=0&b=1&c=1970&d=";
+			url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
+			InputStream input;
+			input = new URL(url).openStream();
+			Scanner s = new Scanner(input);
+			s.useDelimiter("\\A");
+			String csv = s.hasNext() ? s.next() : "";
+			s.close();
+			input.close();
+			csv = csv.replace("\"", "");
+			historical_data = new ArrayList<String>(Arrays.asList(csv.split("\n")));
+		}
+		catch(Exception ex) {
+			System.out.println("Could not retrieve data");
+		}
+	}
+	
+	/*
+	 * Uses binary search to find data from a particular date. 
+	 * @param	Date	String format in yyyy/MM/dd
+	 */
+	public String find_data_by_date(String date) {
+		int min = 0;
+		int max = historical_data.size() -1;
+		while (max >= min) {
+			int mid = min + (max - min) /2;
+			String y = historical_data.get(mid);
+			if (historical_data.get(mid).contains(date))
+			{
+				return historical_data.get(mid);
+			}
+			else if (historical_data.get(mid).compareTo(date) < 0) //lower half of array
+				max = mid - 1;
+			else //upper half
+				min = mid + 1;
+		}
+		return "FAIL";
+	}
+	
 	public void find_ten_year_change(String day, String month, String year) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -307,7 +319,7 @@ public class YStockQuote {
 
 	public void find_ytd_change(String day, String month, String year) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -330,7 +342,7 @@ public class YStockQuote {
 
 	public void find_five_year_change(String day, String month, String year) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -353,7 +365,7 @@ public class YStockQuote {
 
 	public void find_one_year_change(String day, String month, String year) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -376,7 +388,7 @@ public class YStockQuote {
 
 	public void find_six_month_change(String day, String month, String year) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -399,7 +411,7 @@ public class YStockQuote {
 
 	public void find_three_month_change(String day, String month, String year) throws MalformedURLException, IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -422,7 +434,7 @@ public class YStockQuote {
 
 	public void find_one_month_change(String day, String month, String year) throws IOException {
 		// TODO Auto-generated method stub
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -444,7 +456,7 @@ public class YStockQuote {
 	}
 
 	public void find_five_day_change(String day, String month, String year) throws MalformedURLException, IOException {
-		String url = "http://ichart.finance.yahoo.com/table.csv?s=WU&a=";
+		String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=";
 		
 		url += month + "&b=" + day + "&c=" + year + "&d=";
 		url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";

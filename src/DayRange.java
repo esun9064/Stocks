@@ -47,39 +47,29 @@ public class DayRange {
 	
 	public static void calculate()
 	{
-		Date temp_date = new Date();
-		Calendar temp_cal = new GregorianCalendar();
-		temp_cal.setTime(temp_date);
-		if (calendar.get(Calendar.MONTH) == temp_cal.get(Calendar.MONTH) 
-				&&	calendar.get(Calendar.DAY_OF_WEEK) == temp_cal.get(Calendar.DAY_OF_WEEK) 
-				&& calendar.get(Calendar.YEAR) == temp_cal.get(Calendar.YEAR)) {			//error here
-			current_date = temp_date;
-			calendar.setTime(current_date);
-
-			if (calendar.get(Calendar.HOUR_OF_DAY) < 9)
-				calendar.add(Calendar.HOUR_OF_DAY, -16);
-			else if (calendar.get(Calendar.HOUR_OF_DAY) == 9 && calendar.get(Calendar.MINUTE) < 30)
-			{
-				calendar.add(Calendar.DAY_OF_YEAR, -1);
-				calendar.set(Calendar.HOUR_OF_DAY, 12);
-			}
-
-			current_date = calendar.getTime();
-
-			five_day = find_fiveDay().split("/");
-			one_month = find_oneMonth().split("/");
-			three_month = find_threeMonth().split("/");
-			six_month = find_sixMonth().split("/");
-			one_year = find_oneYear().split("/");
-			ytd = find_YTD().split("/");
-			five_year = find_fiveYear().split("/");
-			ten_year = find_tenYear().split("/");
-		}
 		
-		
-		else {
-			
+
+		if (calendar.get(Calendar.HOUR_OF_DAY) < 9)
+			calendar.add(Calendar.HOUR_OF_DAY, -16);
+		else if (calendar.get(Calendar.HOUR_OF_DAY) == 9 && calendar.get(Calendar.MINUTE) < 30)
+		{
+			calendar.add(Calendar.DAY_OF_YEAR, -1);
+			calendar.set(Calendar.HOUR_OF_DAY, 12);
 		}
+
+		current_date = calendar.getTime();
+
+		five_day = find_fiveDay().split("/");
+		one_month = find_oneMonth().split("/");
+		three_month = find_threeMonth().split("/");
+		six_month = find_sixMonth().split("/");
+		one_year = find_oneYear().split("/");
+		ytd = find_YTD().split("/");
+		five_year = find_fiveYear().split("/");
+		ten_year = find_tenYear().split("/");
+	
+		
+
 		
 	}
 	
@@ -122,9 +112,7 @@ public class DayRange {
 	private static String find_oneMonth()
 	{
 		calendar.setTime(current_date);
-		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
 		calendar.add(Calendar.MONTH, -1);
-		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
 
 		switch(calendar.get(Calendar.DAY_OF_WEEK))
 		{

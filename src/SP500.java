@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -115,7 +117,7 @@ public class SP500 {
 	
 		DayRange b = new DayRange();
 
-
+		/*
 	    System.out.printf("%s/%s/%s\n", DayRange.five_day[0], DayRange.five_day[1], DayRange.five_day[2]);
 	    System.out.printf("%s/%s/%s\n", DayRange.one_month[0], DayRange.one_month[1], DayRange.one_month[2]);
 	    System.out.printf("%s/%s/%s\n", DayRange.three_month[0], DayRange.three_month[1], DayRange.three_month[2]);
@@ -124,7 +126,31 @@ public class SP500 {
 	    System.out.printf("%s/%s/%s\n", DayRange.five_year[0], DayRange.five_year[1], DayRange.five_year[2]);
 	    System.out.printf("%s/%s/%s\n", DayRange.ten_year[0], DayRange.ten_year[1], DayRange.ten_year[2]);
 	    System.out.printf("%s/%s/%s\n", DayRange.ytd[0], DayRange.ytd[1], DayRange.ytd[2]);
+		*/
+		Date today = new Date();
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(today);
+		YStockQuote x = new YStockQuote("GOOG");
+		try {
+			x.find_historical_data(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		System.out.println(x.historical_data.get(0));
+		System.out.println(x.historical_data.get(1));
+		System.out.println(x.historical_data.get(x.historical_data.size()-1));
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String date =  df.format(calendar.getTime());
+		System.out.println((date));
 
+		System.out.println(x.find_data_by_date(date));
+		
 
 		
 	    
