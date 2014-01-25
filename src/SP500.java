@@ -8,7 +8,9 @@ import java.util.GregorianCalendar;
 
 import javax.swing.JFrame;
 
-
+/*
+ * Test file
+ */
 public class SP500 {
 
 	public static String find_fiveDay()
@@ -117,16 +119,9 @@ public class SP500 {
 	
 		DayRange b = new DayRange();
 
-		/*
-	    System.out.printf("%s/%s/%s\n", DayRange.five_day[0], DayRange.five_day[1], DayRange.five_day[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.one_month[0], DayRange.one_month[1], DayRange.one_month[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.three_month[0], DayRange.three_month[1], DayRange.three_month[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.six_month[0], DayRange.six_month[1], DayRange.six_month[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.one_year[0], DayRange.one_year[1], DayRange.one_year[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.five_year[0], DayRange.five_year[1], DayRange.five_year[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.ten_year[0], DayRange.ten_year[1], DayRange.ten_year[2]);
-	    System.out.printf("%s/%s/%s\n", DayRange.ytd[0], DayRange.ytd[1], DayRange.ytd[2]);
-		*/
+
+	  
+
 		Date today = new Date();
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(today);
@@ -140,6 +135,43 @@ public class SP500 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	    x.find_five_day_change(DayRange.five_day);
+	    String[] change = x.get_five_day_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+	    
+	    x.find_one_month_change(DayRange.one_month);
+	    change = x.get_one_month_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+	    
+		x.find_three_month_change(DayRange.three_month);
+	    change = x.get_three_month_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+		
+	    x.find_six_month_change(DayRange.six_month);
+	    change = x.get_six_month_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+	    
+		x.find_one_year_change(DayRange.one_year);
+	    change = x.get_one_year_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+	    
+		x.find_five_year_change(DayRange.five_year);
+	    change = x.get_five_year_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+		
+		x.find_ten_year_change(DayRange.ten_year);
+	    change = x.get_ten_year_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+	    
+		x.find_max_change();
+	    change = x.get_max_year_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+		
+		x.find_ytd_change(DayRange.ytd);
+	    change = x.get_ytd_change();
+	    System.out.println(change[0] + " " + change[1] + " " + change[2]);
+		/*
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		System.out.println(x.historical_data.get(0));
 		System.out.println(x.historical_data.get(1));
@@ -150,7 +182,7 @@ public class SP500 {
 		System.out.println((date));
 
 		System.out.println(x.find_data_by_date(date));
-		
+		*/
 
 		
 	    
