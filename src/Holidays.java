@@ -5,30 +5,15 @@ import java.util.GregorianCalendar;
 
 //
 public class Holidays {
-    public static int federal_or_stock = 0;
 
 
     public static Date NewYearsDayObserved (int nYear) {
         Calendar cal = new GregorianCalendar(nYear, Calendar.JANUARY, 1);
         switch(cal.get(Calendar.DAY_OF_WEEK)) {
             case Calendar.SATURDAY :
-                if (federal_or_stock == 1) {
-                    Calendar temp = new GregorianCalendar(--nYear, Calendar.DECEMBER, 31);
-                    if (temp.get(Calendar.DAY_OF_MONTH) == temp.getActualMaximum(Calendar.DAY_OF_MONTH))
-                        return null;
-                    return (new GregorianCalendar(--nYear, Calendar.DECEMBER, 31)).getTime();
-                }
-                else
-                    return (new GregorianCalendar(--nYear, Calendar.DECEMBER, 31)).getTime();
+                return (new GregorianCalendar(--nYear, Calendar.DECEMBER, 31)).getTime();
             case Calendar.SUNDAY :
-                if (federal_or_stock == 1) {
-                    Calendar temp = new GregorianCalendar(nYear, Calendar.JANUARY, 2);
-                    if (temp.get(Calendar.DAY_OF_MONTH) == temp.getActualMaximum(Calendar.DAY_OF_MONTH))
-                        return null;
-                    return (new GregorianCalendar(nYear, Calendar.JANUARY, 2)).getTime();
-                }
-                else
-                    return (new GregorianCalendar(nYear, Calendar.JANUARY, 2)).getTime();
+                return (new GregorianCalendar(nYear, Calendar.JANUARY, 2)).getTime();
             case Calendar.MONDAY :
             case Calendar.TUESDAY :
             case Calendar.WEDNESDAY :
@@ -82,7 +67,9 @@ public class Holidays {
     }
 
     public static Date EasterSunday(int nYear) {
-
+    	/*
+    	 * Algorithm from US Naval Observatory
+    	 */
         // Let y be the year (such as 1800 or 2001).
         int y = nYear;
         // Divide y by 19 and call the remainder a. Ignore the quotient.
@@ -232,7 +219,7 @@ public class Holidays {
     public static void main(String [ ] args) {
 
         SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM d");
-        for (int nYear = 2013; nYear <= 2030; nYear++) {
+        for (int nYear = 2013; nYear <= 2035; nYear++) {
             System.out.println("Federal Holidays for " + nYear + ":");
             System.out.printf("%-23s = %s%n", df.format(Holidays.NewYearsDayObserved(nYear)), "New Year's Day (observed)");
             System.out.printf("%-23s = %s%n", df.format(Holidays.MartinLutherKing(nYear)), "ML King Day");
