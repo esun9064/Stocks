@@ -18,6 +18,7 @@ public class YStockQuote {
     /*
      * Stock data
      */
+    private String ticker;
     private String name, symbol, price, change, volume;
     private String avg_daily_volume, stock_exchange, market_cap;
     private String book_value, ebita, dividend_per_share, dividend_yield;
@@ -34,8 +35,13 @@ public class YStockQuote {
     public ArrayList<String> historical_data;
 
     public YStockQuote(String ticker) {
+        this.ticker = ticker;
+        this.update();
+    }
+    
+    public void update() {
         String url = "http://finance.yahoo.com/d/quotes.csv?s=";
-        url += ticker;		
+        url += ticker;      
         url += "&f=" + "snl1c6va2xj1b4j4dyekjm3m4rr5p5p6s7p2s6e7e8e9ght8d1j2";
         InputStream input;
         try {
@@ -87,12 +93,14 @@ public class YStockQuote {
             shares_outstanding = shares_outstanding.replace(" ", "");
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Error with connection");
         }
     }
+    
     /*
      * Array list of comma separated values Date, Open, High, Low, Close, Volume, Adjusted Close
      */
-    public void find_historical_data(int day, int month, int year) throws MalformedURLException, IOException {
+    public void find_historical_data(int day, int month, int year) {
         try {
             String url = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=0&b=1&c=1970&d=";
             url += month + "&e=" + day + "&f=" + year + "&g=d&ignore=.csv";
@@ -108,6 +116,8 @@ public class YStockQuote {
         }
         catch(Exception ex) {
             System.out.println("Could not retrieve data");
+            System.out.println("Error with connection");
+
         }
     }
 
@@ -139,7 +149,7 @@ public class YStockQuote {
         double current_price = Double.parseDouble(price);
         double change = current_price - max_year_price;
         change = Math.round(change * 100.0) / 100.0;
-        double percent = Math.round(change/current_price * 100 * 100.0) / 100.0;
+        double percent = Math.round(change/max_year_price * 100 * 100.0) / 100.0;
         max_year = new String[3];
         max_year[0] = String.valueOf(change);
         max_year[1] = String.valueOf(percent);
@@ -158,7 +168,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - ten_year_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/ten_year_price * 100 *100.0)/100.0;
             ten_year = new String[3];
             ten_year[0] = String.valueOf(change);
             ten_year[1] = String.valueOf(percent);	
@@ -172,7 +182,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - ten_year_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/ten_year_price * 100 *100.0)/100.0;
                 ten_year = new String[3];
                 ten_year[0] = String.valueOf(change);
                 ten_year[1] = String.valueOf(percent);	
@@ -189,7 +199,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - ytd_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/ytd_price * 100 *100.0)/100.0;
             YTD = new String[3];
             YTD[0] = String.valueOf(change);
             YTD[1] = String.valueOf(percent);
@@ -203,7 +213,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - ytd_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/ytd_price * 100 *100.0)/100.0;
                 YTD = new String[3];
                 YTD[0] = String.valueOf(change);
                 YTD[1] = String.valueOf(percent);
@@ -220,7 +230,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - five_year_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/five_year_price * 100 *100.0)/100.0;
             five_year = new String[3];
             five_year[0] = String.valueOf(change);
             five_year[1] = String.valueOf(percent);
@@ -234,7 +244,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - five_year_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/five_year_price * 100 *100.0)/100.0;
                 five_year = new String[3];
                 five_year[0] = String.valueOf(change);
                 five_year[1] = String.valueOf(percent);
@@ -251,7 +261,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - one_year_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/one_year_price * 100 *100.0)/100.0;
             one_year = new String[3];
             one_year[0] = String.valueOf(change);
             one_year[1] = String.valueOf(percent);
@@ -265,7 +275,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - one_year_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/one_year_price * 100 *100.0)/100.0;
                 one_year = new String[3];
                 one_year[0] = String.valueOf(change);
                 one_year[1] = String.valueOf(percent);
@@ -282,7 +292,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - six_month_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/six_month_price * 100 *100.0)/100.0;
             six_month = new String[3];
             six_month[0] = String.valueOf(change);
             six_month[1] = String.valueOf(percent);
@@ -296,7 +306,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - six_month_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/six_month_price * 100 *100.0)/100.0;
                 six_month = new String[3];
                 six_month[0] = String.valueOf(change);
                 six_month[1] = String.valueOf(percent);
@@ -313,7 +323,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - three_month_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/three_month_price * 100 *100.0)/100.0;
             three_month = new String[3];
             three_month[0] = String.valueOf(change);
             three_month[1] = String.valueOf(percent);
@@ -327,7 +337,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - three_month_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/three_month_price * 100 *100.0)/100.0;
                 three_month = new String[3];
                 three_month[0] = String.valueOf(change);
                 three_month[1] = String.valueOf(percent);
@@ -344,7 +354,7 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - one_month_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/one_month_price * 100 *100.0)/100.0;
             one_month = new String[3];
             one_month[0] = String.valueOf(change);
             one_month[1] = String.valueOf(percent);
@@ -358,7 +368,7 @@ public class YStockQuote {
                 double current_price = Double.parseDouble(price);
                 double change = current_price - one_month_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/one_month_price * 100 *100.0)/100.0;
                 one_month = new String[3];
                 one_month[0] = String.valueOf(change);
                 one_month[1] = String.valueOf(percent);
@@ -368,10 +378,11 @@ public class YStockQuote {
     }
 
     public void find_five_day_change(String date) {
+        
         int max = historical_data.size() -1;
         if (historical_data.get(max).compareTo(date) > 0) {
             String[] data = historical_data.get(max).split(",");
-            double five_day_price = Double.parseDouble(data[data.length-1]);
+            double five_day_price = Double.parseDouble(data[data.length - 1]);
             double current_price = Double.parseDouble(price);
             double change = current_price - five_day_price;
             change = Math.round(change * 100.0) / 100.0;
@@ -385,7 +396,7 @@ public class YStockQuote {
             String entries = this.find_data_by_date(date);
             if (!entries.equals("FAIL")) {
                 String[] data = entries.split(",");
-                double five_day_price = Double.parseDouble(data[data.length-1]);
+                double five_day_price = Double.parseDouble(data[data.length - 1]);
                 double current_price = Double.parseDouble(price);
                 double change = current_price - five_day_price;
                 change = Math.round(change * 100.0) / 100.0;
@@ -396,8 +407,9 @@ public class YStockQuote {
                 five_day[2] = data[0];
             }
         }
-    }
 
+    }
+    
     public String[] get_max_year_change() {
         return this.max_year;
     }

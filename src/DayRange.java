@@ -24,13 +24,28 @@ public class DayRange {
     public static String ten_year;
 
     public DayRange() {
+        this.update();
+    }
+    public boolean is_old() {
+        boolean old = false;
+        Date temp = new Date();
+        Calendar temp_cal = new GregorianCalendar();
+        temp_cal.setTime(temp);
+        if (temp_cal.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)
+                && temp_cal.get(Calendar.YEAR) == calendar.get(Calendar.DAY_OF_YEAR))
+            old = true;
+        
+        return old;
+    }
+    
+    public void update() {
         current_date = new Date();
-        calendar = GregorianCalendar.getInstance();	
+        calendar = GregorianCalendar.getInstance(); 
         holidays = new GregorianCalendar[9];
         len = holidays.length;
         calendar.setTime(current_date);
         for (int i = 0; i < len; i++)
-            holidays[i] = GregorianCalendar.getInstance();	    	
+            holidays[i] = GregorianCalendar.getInstance();          
         holidays[0].setTime(Holidays.NewYearsDayObserved(calendar.get(Calendar.YEAR)));
         holidays[1].setTime(Holidays.MartinLutherKing(calendar.get(Calendar.YEAR)));
         holidays[2].setTime(Holidays.PresidentsDay(calendar.get(Calendar.YEAR)));
@@ -40,10 +55,11 @@ public class DayRange {
         holidays[6].setTime(Holidays.LaborDay(calendar.get(Calendar.YEAR)));
         holidays[7].setTime(Holidays.Thanksgiving(calendar.get(Calendar.YEAR)));
         holidays[8].setTime(Holidays.ChristmasDayObserved(calendar.get(Calendar.YEAR)));
-        calculate();	
+        this.calculate();
     }
-
-    public static void calculate() {
+    
+    
+    public void calculate() {
         if (calendar.get(Calendar.HOUR_OF_DAY) < 9)
             calendar.add(Calendar.HOUR_OF_DAY, -16);
         else if (calendar.get(Calendar.HOUR_OF_DAY) == 9 && calendar.get(Calendar.MINUTE) < 30) {
@@ -51,7 +67,6 @@ public class DayRange {
             calendar.set(Calendar.HOUR_OF_DAY, 12);
         }
 
-        current_date = calendar.getTime();
 
         five_day = find_fiveDay();
         one_month = find_oneMonth();
