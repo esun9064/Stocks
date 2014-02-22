@@ -46,48 +46,58 @@ public class YStockQuote {
         InputStream input;
         try {
             input = new URL(url).openStream();
-            Scanner s = new Scanner(input);
-            s.useDelimiter("\\A");
-            String csv = s.hasNext() ? s.next() : "";
-            s.close();
+            Scanner scanner = new Scanner(input);
+            scanner.useDelimiter("\\A");
+            String csv = scanner.hasNext() ? scanner.next() : "";
+            scanner.close();
             input.close();
             csv = csv.replace("\"", "");
             String[] data = csv.split(",");
+            
             symbol = data[0];
-            name = data[1];
-            price = data[2];
-            change = data[3];
-            volume = data[4];
-            avg_daily_volume = data[5];
-            stock_exchange = data[6];
-            market_cap = data[7];
-            book_value = data[8];
-            ebita = data[9];
-            dividend_per_share = data[10];
-            dividend_yield = data[11];
-            earnings_per_share = data[12];
-            year_high = data[13];
-            year_low = data[14];
-            fiftyday_moving_avg = data[15];
-            twohundredday_moving_avg = data[16];
-            price_earnings_ratio = data[17];
-            price_earnings_growth_ratio = data[18];
-            price_sales_ratio = data[19];
-            price_book_ratio = data[20];
-            short_ratio = data[21];
-            percent_change = data[22];
-            revenue = data[23];
-            eps_estimate_current_yr = data[24];
-            eps_estimate_next_yr = data[25];
-            eps_estimate_next_quarter = data[26];
-            days_low = data[27];
-            days_high = data[28];
-            one_yr_target = data[29];
-            last_trade_date = data[30];
+            int s = 0;
+            try {
+            	name = data[1];
+            	double temp = Double.parseDouble(data[2]);
+            	price = data[2];
+            }
+            catch (Exception ex) {
+            	name = data[1] + data[2];
+            	price = data[3];
+            	s = 1;
+            }
+            change = data[3 + s];
+            volume = data[4 + s];
+            avg_daily_volume = data[5 + s];
+            stock_exchange = data[6 + s];
+            market_cap = data[7 + s];
+            book_value = data[8 + s];
+            ebita = data[9 + s];
+            dividend_per_share = data[10 + s];
+            dividend_yield = data[11 + s];
+            earnings_per_share = data[12 + s];
+            year_high = data[13 + s];
+            year_low = data[14 + s];
+            fiftyday_moving_avg = data[15 + s];
+            twohundredday_moving_avg = data[16 + s];
+            price_earnings_ratio = data[17 + s];
+            price_earnings_growth_ratio = data[18 + s];
+            price_sales_ratio = data[19 + s];
+            price_book_ratio = data[20 + s];
+            short_ratio = data[21 + s];
+            percent_change = data[22 + s];
+            revenue = data[23 + s];
+            eps_estimate_current_yr = data[24 + s];
+            eps_estimate_next_yr = data[25 + s];
+            eps_estimate_next_quarter = data[26 + s];
+            days_low = data[27 + s];
+            days_high = data[28 + s];
+            one_yr_target = data[29 + s];
+            last_trade_date = data[30 + s];
             int len = data.length;
             int i;
-            shares_outstanding = data[31];
-            for (i = 31; i < len; i++)
+            shares_outstanding = data[31 + s];
+            for (i = 31 + s; i < len; i++)
                 shares_outstanding += data[i];
             shares_outstanding = shares_outstanding.replace("\r\n", "");
             shares_outstanding = shares_outstanding.replace(" ", "");
@@ -141,6 +151,29 @@ public class YStockQuote {
         }
         return "FAIL";
     }
+    /*
+     * Five day change, will use the previous day close if possible
+     */
+    public String find_data_by_date(String date, int check) {
+        int min = 0;
+        int max = historical_data.size() -1;
+        while (max >= min) {
+            int mid = min + (max - min) /2;
+            String y = historical_data.get(mid);
+            if (historical_data.get(mid).contains(date)) {
+            	if ((mid + 1) <= (historical_data.size() - 1))
+            		return historical_data.get(mid+1) + ",previous close";
+            	else
+            		return historical_data.get(mid) + ",current open";
+            }
+            else if (historical_data.get(mid).compareTo(date) < 0) //lower half of array
+                max = mid - 1;
+            else //upper half
+                min = mid + 1;
+        }
+        return "FAIL";
+    }
+    
 
     public void find_max_change() {
         int max = historical_data.size() - 1;
@@ -386,21 +419,25 @@ public class YStockQuote {
             double current_price = Double.parseDouble(price);
             double change = current_price - five_day_price;
             change = Math.round(change * 100.0) / 100.0;
-            double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+            double percent = Math.round(change/five_day_price * 100 *100.0)/100.0;
             five_day = new String[3];
             five_day[0] = String.valueOf(change);
             five_day[1] = String.valueOf(percent);	
             five_day[2] = data[0];
         }
         else {
-            String entries = this.find_data_by_date(date);
+            String entries = this.find_data_by_date(date, 0);
             if (!entries.equals("FAIL")) {
                 String[] data = entries.split(",");
-                double five_day_price = Double.parseDouble(data[data.length - 1]);
+                double five_day_price;
+                if (data[data.length - 1].equals("previous close"))
+                	five_day_price = Double.parseDouble(data[data.length -2]);
+                else 
+                	five_day_price = Double.parseDouble(data[1]);
                 double current_price = Double.parseDouble(price);
                 double change = current_price - five_day_price;
                 change = Math.round(change * 100.0) / 100.0;
-                double percent = Math.round(change/current_price * 100 *100.0)/100.0;
+                double percent = Math.round(change/five_day_price * 100 *100.0)/100.0;
                 five_day = new String[3];
                 five_day[0] = String.valueOf(change);
                 five_day[1] = String.valueOf(percent);	

@@ -50,36 +50,36 @@ public class SP500 {
 
         x.find_one_month_change(DayRange.one_month);
         change = x.get_one_month_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("One month change: " + change[0] + " " + change[1] + " " + change[2]);
 
         x.find_three_month_change(DayRange.three_month);
         change = x.get_three_month_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("Three month change: " +change[0] + " " + change[1] + " " + change[2]);
 
         x.find_six_month_change(DayRange.six_month);
         change = x.get_six_month_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("Six month change: " +change[0] + " " + change[1] + " " + change[2]);
 
         x.find_one_year_change(DayRange.one_year);
         change = x.get_one_year_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("One Year change: " +change[0] + " " + change[1] + " " + change[2]);
 
         x.find_five_year_change(DayRange.five_year);
         change = x.get_five_year_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("Five Year change: " +change[0] + " " + change[1] + " " + change[2]);
 
         x.find_ten_year_change(DayRange.ten_year);
         change = x.get_ten_year_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("Ten Year change: " +change[0] + " " + change[1] + " " + change[2]);
 
         x.find_max_change();
         change = x.get_max_year_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("Max change: " +change[0] + " " + change[1] + " " + change[2]);
 
         x.find_ytd_change(DayRange.ytd);
         change = x.get_ytd_change();
-        System.out.println(change[0] + " " + change[1] + " " + change[2]);
-    
+        System.out.println("YTD change: " +change[0] + " " + change[1] + " " + change[2]);
+        System.out.println("\n");
         
     }
     
@@ -152,13 +152,19 @@ public class SP500 {
         
        
         YStockQuote x = new YStockQuote("GOOG");
+        YStockQuote y = new YStockQuote("TSLA");
+        sp.update_per_15(y);
         sp.update_per_15(x);
         sp.show_hist_data(x, sp.b);
-        
+        sp.show_hist_data(y, sp.b);
+
         String c = x.get_change();
         
         
         System.out.println(c);
+        c = y.get_change();
+        System.out.println(c);
+
         /*
            calendar.add(Calendar.DAY_OF_MONTH, -1);
            System.out.println(x.historical_data.get(0));
