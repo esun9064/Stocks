@@ -215,24 +215,5 @@ public class Holidays {
         }
     }
 
-
-    public static void main(String [ ] args) {
-
-        SimpleDateFormat df = new SimpleDateFormat("EEEE, MMMM d");
-        for (int nYear = 2013; nYear <= 2035; nYear++) {
-            System.out.println("Federal Holidays for " + nYear + ":");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.NewYearsDayObserved(nYear)), "New Year's Day (observed)");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.MartinLutherKing(nYear)), "ML King Day");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.PresidentsDay(nYear)), "President's Day");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.GoodFridayObserved(nYear)), "Good Friday");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.EasterSunday(nYear)), "Easter Sunday");
-
-            System.out.printf("%-23s = %s%n", df.format(Holidays.MemorialDay(nYear)), "Memorial Day (observed)");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.IndependenceDayObserved(nYear)), "Independence Day (observed)");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.LaborDay(nYear)), "Labor Day");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.Thanksgiving(nYear)), "Thanksgiving Day");
-            System.out.printf("%-23s = %s%n", df.format(Holidays.ChristmasDayObserved(nYear)), "Christmas Day (observed)");
-            System.out.println();
-        }
-    }
+	
 }
