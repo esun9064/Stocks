@@ -1,0 +1,6 @@
+aapl
+tsla
+wmt
+v
+nke
+mcd

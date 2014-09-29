@@ -1,5 +1,3 @@
-package com.std;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,8 +5,8 @@ import java.util.GregorianCalendar;
 
 //
 public class Holidays {
-    
-    
+
+
     public static Date NewYearsDayObserved (int nYear) {
         Calendar cal = new GregorianCalendar(nYear, Calendar.JANUARY, 1);
         switch(cal.get(Calendar.DAY_OF_WEEK)) {
@@ -25,7 +23,7 @@ public class Holidays {
                 return cal.getTime();
         }
     }
-    
+
     public static Date MartinLutherKing (int nYear) {
         // Third Monday in January
         Calendar cal = new GregorianCalendar(nYear, Calendar.JANUARY, 1);
@@ -46,7 +44,7 @@ public class Holidays {
                 return (new GregorianCalendar(nYear, Calendar.JANUARY, 17)).getTime();
         }
     }
-    
+
     public static Date PresidentsDay (int nYear) {
         // Third Monday in February
         Calendar cal = new GregorianCalendar(nYear, Calendar.FEBRUARY, 1);
@@ -67,11 +65,11 @@ public class Holidays {
                 return (new GregorianCalendar(nYear, Calendar.FEBRUARY, 17)).getTime();
         }
     }
-    
+
     public static Date EasterSunday(int nYear) {
-        /*
-        * Algorithm from US Naval Observatory
-        */
+    	/*
+    	 * Algorithm from US Naval Observatory
+    	 */
         // Let y be the year (such as 1800 or 2001).
         int y = nYear;
         // Divide y by 19 and call the remainder a. Ignore the quotient.
@@ -97,10 +95,10 @@ public class Holidays {
         int n = (h - m + r + 90) / 25;
         // Divide h - m + r + n + 19 by 32 to get a remainder p. Ignore the quotient.
         int p = (h - m + r + n + 19) % 32;
-        
+
         return new GregorianCalendar(y, n-1, p).getTime();
     }
-    
+
     public static Date GoodFridayObserved(int nYear) {
         // Get Easter Sunday and subtract two days
         int nEasterMonth = 0;
@@ -114,10 +112,10 @@ public class Holidays {
         nEasterMonth = cal.get(Calendar.MONTH);
         nEasterDay = cal.get(Calendar.DAY_OF_MONTH) ;
         cal.add(Calendar.DAY_OF_YEAR, -2);
-        
+
         return cal.getTime();
     }
-    
+
     public static Date MemorialDay (int nYear) {
         // Last Monday in May
         Calendar cal = new GregorianCalendar(nYear, Calendar.MAY, 1);
@@ -138,7 +136,7 @@ public class Holidays {
                 return (new GregorianCalendar(nYear, Calendar.MAY, 31)).getTime();
         }
     }
-    
+
     public static Date IndependenceDayObserved (int nYear) {
         Calendar cal = new GregorianCalendar(nYear, Calendar.JULY, 4);
         switch(cal.get(Calendar.DAY_OF_WEEK)) {
@@ -155,7 +153,7 @@ public class Holidays {
                 return cal.getTime();
         }
     }
-    
+
     public static Date LaborDay (int nYear) {
         // The first Monday in September
         Calendar cal = new GregorianCalendar(nYear, Calendar.SEPTEMBER, 1);
@@ -177,9 +175,9 @@ public class Holidays {
                 return cal.getTime();
         }
     }
-    
-    
-    
+
+
+
     public static Date Thanksgiving(int nYear) {
         Calendar cal = new GregorianCalendar(nYear, Calendar.NOVEMBER, 1);
         switch(cal.get(Calendar.DAY_OF_WEEK)) {
@@ -199,7 +197,7 @@ public class Holidays {
                 return (new GregorianCalendar(nYear, Calendar.NOVEMBER, 27)).getTime();
         }
     }
-    
+
     public static Date ChristmasDayObserved (int nYear)	{
         Calendar cal = new GregorianCalendar(nYear, Calendar.DECEMBER, 25);
         switch(cal.get(Calendar.DAY_OF_WEEK)) {
@@ -216,6 +214,6 @@ public class Holidays {
                 return cal.getTime();
         }
     }
-    
-    
+
+	
 }
